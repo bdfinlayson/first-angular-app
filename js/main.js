@@ -41,8 +41,6 @@ angular
       }
     ];
 
-    vm.newTA = {};
-
     vm.addTA = function () {
       vm.newTA.name = 'Adam';
       vm.newTA.nickName = vm.newTA.firstName[0].toUpperCase() + 'Adam';
@@ -58,6 +56,7 @@ angular
 
     function _clearNewTA() {
       vm.newTA = {};
+      // vm.newTA.$setPristine();
     }
 
   });
