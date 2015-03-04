@@ -26,7 +26,7 @@
       <div class="hellofriends" ng-repeat="person in tas.data
          | filter:friendFilterQuery
          | orderBy:'name':friendReverse">
-        <h1 style="display: inline">Hello {{person.name | uppercase}}</h1>
+        <h1 style="display: inline">Hello {{person.nickName + ' ' + person.name | uppercase}}</h1>
         <button ng-click="tas.removeTA(person)">X</button>
       </div>
     </div>
