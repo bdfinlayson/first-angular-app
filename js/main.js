@@ -8,31 +8,36 @@ angular
         nickName: 'TAdam',
         name: 'Adam',
         firstName: 'Adam',
-        lastName: 'Kèésecker'
+        lastName: 'Kèésecker',
+        current: true
       },
       {
         nickName: 'ZAdam',
         name: 'Adam',
         firstName: 'Zöe',
-        lastName: 'Ames'
+        lastName: 'Ames',
+        current: true
       },
       {
         nickName: 'JuAdam',
         name: 'Adam',
         firstName: 'Juan',
-        lastName: 'Rødrįguež'
+        lastName: 'Rødrįguež',
+        current: true
       },
       {
         nickName: 'BrAdam',
         name: 'Adam',
         firstName: 'Brian',
-        lastName: 'Hiått'
+        lastName: 'Hiått',
+        current: false
       },
       {
         nickName: 'BAdam',
         name: 'Adam',
         firstName: 'Adam',
-        lastName: 'Barñhærd'
+        lastName: 'Barñhærd',
+        current: false
       }
     ];
 
