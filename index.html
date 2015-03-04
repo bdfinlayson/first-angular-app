@@ -32,15 +32,9 @@
             </label>
           </div>
         </div>
-        <input type="submit" value="Save">
+        <input class="btn" ng-class="{'btn-danger': tas.newTA.$invalid, 'btn-success': tas.newTA.$valid}" ng-disabled="tas.newTA.$invalid" type="submit" value="Save">
       </form>
-      <br>
-      Search: <input ng-model="friendFilterQuery">
-      <br>
-      Sort:
-      <button ng-click="friendReverse=!friendReverse">Change Sort</button>
-      <br>
-      <table>
+      <table class="table">
         <thead>
           <tr>
             <th>Name</th>
@@ -65,6 +59,12 @@
           </tr>
         </tbody>
       </table>
+      <br>
+      Search: <input ng-model="friendFilterQuery">
+      <br>
+      Sort:
+      <button ng-click="friendReverse=!friendReverse">Change Sort</button>
+      <br>
     </div>
 
     <script src="bower_components/angular/angular.min.js"></script>
