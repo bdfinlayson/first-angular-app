@@ -5,19 +5,34 @@ angular
 
     vm.data = [
       {
-        name: 'TAdam'
+        nickName: 'TAdam',
+        name: 'Adam',
+        firstName: 'Adam',
+        lastName: 'Kèésecker'
       },
       {
-        name: 'ZAdam'
+        nickName: 'ZAdam',
+        name: 'Adam',
+        firstName: 'Zöe',
+        lastName: 'Ames'
       },
       {
-        name: 'JuAdam'
+        nickName: 'JuAdam',
+        name: 'Adam',
+        firstName: 'Juan',
+        lastName: 'Rødrįguež'
       },
       {
-        name: 'BrAdam'
+        nickName: 'BrAdam',
+        name: 'Adam',
+        firstName: 'Brian',
+        lastName: 'Hiått'
       },
       {
-        name: 'BAdam'
+        nickName: 'BAdam',
+        name: 'Adam',
+        firstName: 'Adam',
+        lastName: 'Barñhærd'
       }
     ];
 
