@@ -43,7 +43,10 @@ angular
 
     vm.addTA = function () {
       var obj = {
-        name: vm.newName
+        name: vm.newName,
+        nickName: vm.newNickname,
+		firstName: vm.newFirstName,
+		lastName: vm.newLastName
       };
 
       vm.data.push(obj);
