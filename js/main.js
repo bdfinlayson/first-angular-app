@@ -53,6 +53,23 @@ angular
         });
     };
 
+    tas.update = function (id, data) {
+      var url = 'https://mytas.firebaseio.com/tas/' + id + '.json';
+
+      $http
+        .put(url, data);
+    };
+
+    tas.delete = function (id, cb) {
+      var url = 'https://mytas.firebaseio.com/tas/' + id + '.json';
+
+      $http
+        .delete(url)
+        .success(function () {
+          cb();
+        });
+    };
+
     return tas;
   })
   .controller('EditController', function ($routeParams, $http, $location, taService) {
@@ -134,18 +151,13 @@ angular
     };
 
     vm.removeTA = function (id) {
-      var url = 'https://mytas.firebaseio.com/tas/' + id + '.json';
-      $http
-        .delete(url)
-        .success(function () {
-          delete vm.data[id];
-        });
+      taService.delete(id, function () {
+        delete vm.data[id];
+      });
     };
 
     vm.updateTA = function (id) {
-      var url = 'https://mytas.firebaseio.com/tas/' + id + '.json';
-      $http
-        .put(url, vm.data[id]);
+      taService.update(id, vm.data[id]);
     };
 
   });
