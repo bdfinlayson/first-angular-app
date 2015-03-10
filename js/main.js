@@ -31,7 +31,7 @@ angular
         vm.ta = data;
       })
   })
-  .controller('TasController', function ($scope, $http) {
+  .controller('TasController', function ($scope, $http, $location) {
     var vm = this;
 
     vm.cohortOptions = [
@@ -62,7 +62,7 @@ angular
       $http.post('https://mytas.firebaseio.com/tas.json', vm.newTA)
         .success(function (res) {
           vm.data[res.name] = vm.newTA;
-          _clearNewTA();
+          $location.path('/tas');
         });
     };
 
@@ -84,10 +84,5 @@ angular
     vm.editTA = function (person) {
 
     };
-
-    function _clearNewTA() {
-      vm.newTA = {};
-      $scope.newTAForm.$setPristine();
-    }
 
   });

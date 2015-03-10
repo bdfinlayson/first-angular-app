@@ -13,10 +13,13 @@
       A block of help text that breaks onto a new line and may extend beyond one line.
     </span>
   </div>
-  <select class="form-control" ng-model="tas.newTA.cohort">
-    <option ng-selected="key===2" ng-repeat="(key, val) in tas.cohortOptions" value={{key}}>{{val}}</option>
-  </select>
-  <div ng-class="{'has-error': tas.newTAForm.$dirty}">
+  <div class="form-group">
+    <label class="control-label">Cohort</label>
+    <select class="form-control" ng-model="tas.newTA.cohort">
+      <option ng-selected="key===2" ng-repeat="(key, val) in tas.cohortOptions" value={{key}}>{{val}}</option>
+    </select>
+  </div>
+  <div class="form-group" ng-class="{'has-error': tas.newTAForm.$dirty}">
     <div class="checkbox">
       <label>
         <input type="checkbox" ng-model="tas.newTA.current">
@@ -24,5 +27,13 @@
       </label>
     </div>
   </div>
+  <div class="form-group" ng-class="{'has-error': tas.newTAForm.$dirty}">
+    <label class="control-label">Image URL:</label>
+    <input type="url" class="form-control" ng-model="tas.newTA.imgUrl" required>
+    <span class="help-block" ng-show="tas.newTAForm.lastName.$error && tas.newTAForm.$dirty">
+      A block of help text that breaks onto a new line and may extend beyond one line.
+    </span>
+  </div>
+  <div ng-show="tas.newTA.imgUrl" class="thumbnail"><img src="{{tas.newTA.imgUrl}}"></div>
   <input class="btn btn-success" ng-show="tas.newTAForm.$valid" type="submit" value="Save">
 </form>
