@@ -17,9 +17,49 @@ angular
         controller: 'ShowController',
         controllerAs: 'show'
       })
+      .when('/tas/:uuid/edit', {
+        templateUrl: 'views/form.html',
+        controller: 'EditController',
+        controllerAs: 'tas'
+      })
       .otherwise({
         redirectTo: '/tas'
       })
+  })
+  .controller('EditController', function ($routeParams, $http, $location) {
+    var vm = this,
+        id = $routeParams.uuid;
+
+    $http
+      .get('https://mytas.firebaseio.com/tas/' + id + '.json')
+      .success(function (data) {
+        vm.newTA = data;
+      });
+
+    vm.cohortOptions = [
+      'N/A',
+      'One',
+      'Two',
+      'Three',
+      'Four',
+      'Five',
+      'Six',
+      'Seven',
+      'Eight',
+      'Nine',
+      'Ten'
+    ];
+
+    vm.addOrEditTA = function () {
+      $http
+        .put('https://mytas.firebaseio.com/tas/' + id + '.json',
+          vm.newTA
+        )
+        .success(function (data) {
+          $location.path('/tas')
+        });
+    }
+
   })
   .controller('ShowController', function ($routeParams, $http) {
     var vm = this,
@@ -29,7 +69,7 @@ angular
       .get('https://mytas.firebaseio.com/tas/' + id + '.json')
       .success(function (data) {
         vm.ta = data;
-      })
+      });
   })
   .controller('TasController', function ($scope, $http, $location) {
     var vm = this;
@@ -54,7 +94,7 @@ angular
         vm.data = data;
       });
 
-    vm.addTA = function () {
+    vm.addOrEditTA = function () {
       vm.newTA.name = 'Adam';
       vm.newTA.nickName = vm.newTA.firstName[0].toUpperCase() + 'Adam';
 
@@ -79,10 +119,6 @@ angular
       var url = 'https://mytas.firebaseio.com/tas/' + id + '.json';
       $http
         .put(url, vm.data[id]);
-    };
-
-    vm.editTA = function (person) {
-
     };
 
   });
