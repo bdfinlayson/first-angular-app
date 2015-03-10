@@ -27,11 +27,12 @@ angular
       })
   })
   .service('taService', function ($http) {
-    var tas = {};
+    var tas = {},
+        FIREBASE_URL = 'https://mytas.firebaseio.com';
 
     tas.findOne = function (id, cb) {
       $http
-        .get('https://mytas.firebaseio.com/tas/' + id + '.json')
+        .get(FIREBASE_URL + '/tas/' + id + '.json')
         .success(function (data) {
           cb(data);
         });
@@ -39,7 +40,7 @@ angular
 
     tas.findAll = function (cb) {
       $http
-        .get('https://mytas.firebaseio.com/tas.json')
+        .get(FIREBASE_URL + '/tas.json')
         .success(function (data) {
           cb(data);
         });
@@ -47,21 +48,26 @@ angular
 
     tas.create = function (data, cb) {
       $http
-        .post('https://mytas.firebaseio.com/tas.json', data)
+        .post(FIREBASE_URL + '/tas.json', data)
         .success(function (res) {
           cb(res);
         });
     };
 
-    tas.update = function (id, data) {
-      var url = 'https://mytas.firebaseio.com/tas/' + id + '.json';
+    tas.update = function (id, data, cb) {
+      var url = FIREBASE_URL + '/tas/' + id + '.json';
 
       $http
-        .put(url, data);
+        .put(url, data)
+        .success(function (res) {
+          if (typeof cb === 'function') {
+            cb(res);
+          }
+        });
     };
 
     tas.delete = function (id, cb) {
-      var url = 'https://mytas.firebaseio.com/tas/' + id + '.json';
+      var url = FIREBASE_URL + '/tas/' + id + '.json';
 
       $http
         .delete(url)
@@ -72,15 +78,9 @@ angular
 
     return tas;
   })
-  .controller('EditController', function ($routeParams, $http, $location, taService) {
+  .controller('EditController', function ($routeParams, $location, taService) {
     var vm = this,
         id = $routeParams.uuid;
-
-    $http
-      .get('https://mytas.firebaseio.com/tas/' + id + '.json')
-      .success(function (data) {
-        vm.newTA = data;
-      });
 
     taService.findOne(id, function (ta) {
       vm.newTA = ta;
@@ -101,14 +101,19 @@ angular
     ];
 
     vm.addOrEditTA = function () {
-      $http
-        .put('https://mytas.firebaseio.com/tas/' + id + '.json',
-          vm.newTA
-        )
-        .success(function (data) {
-          $location.path('/tas')
-        });
-    }
+      // $http
+      //   .put('https://mytas.firebaseio.com/tas/' + id + '.json',
+      //     vm.newTA
+      //   )
+      //   .success(function (data) {
+      //     $location.path('/tas')
+      //   });
+
+      taService.update(id, vm.newTA, function () {
+        $location.path('/tas')
+      })
+
+    };
 
   })
   .controller('ShowController', function ($routeParams, taService) {
@@ -119,7 +124,7 @@ angular
       vm.ta = ta;
     });
   })
-  .controller('TasController', function ($scope, $location, $http, taService) {
+  .controller('TasController', function ($location, taService) {
     var vm = this;
 
     vm.cohortOptions = [
