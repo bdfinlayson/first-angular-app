@@ -26,7 +26,36 @@ angular
         redirectTo: '/tas'
       })
   })
-  .controller('EditController', function ($routeParams, $http, $location) {
+  .service('taService', function ($http) {
+    var tas = {};
+
+    tas.findOne = function (id, cb) {
+      $http
+        .get('https://mytas.firebaseio.com/tas/' + id + '.json')
+        .success(function (data) {
+          cb(data);
+        });
+    };
+
+    tas.findAll = function (cb) {
+      $http
+        .get('https://mytas.firebaseio.com/tas.json')
+        .success(function (data) {
+          cb(data);
+        });
+    };
+
+    tas.create = function (data, cb) {
+      $http
+        .post('https://mytas.firebaseio.com/tas.json', data)
+        .success(function (res) {
+          cb(res);
+        });
+    };
+
+    return tas;
+  })
+  .controller('EditController', function ($routeParams, $http, $location, taService) {
     var vm = this,
         id = $routeParams.uuid;
 
@@ -35,6 +64,10 @@ angular
       .success(function (data) {
         vm.newTA = data;
       });
+
+    taService.findOne(id, function (ta) {
+      vm.newTA = ta;
+    })
 
     vm.cohortOptions = [
       'N/A',
@@ -61,17 +94,15 @@ angular
     }
 
   })
-  .controller('ShowController', function ($routeParams, $http) {
+  .controller('ShowController', function ($routeParams, taService) {
     var vm = this,
         id = $routeParams.uuid;
 
-    $http
-      .get('https://mytas.firebaseio.com/tas/' + id + '.json')
-      .success(function (data) {
-        vm.ta = data;
-      });
+    taService.findOne(id, function (ta) {
+      vm.ta = ta;
+    });
   })
-  .controller('TasController', function ($scope, $http, $location) {
+  .controller('TasController', function ($scope, $location, $http, taService) {
     var vm = this;
 
     vm.cohortOptions = [
@@ -88,22 +119,18 @@ angular
       'Ten'
     ];
 
-    $http
-      .get('https://mytas.firebaseio.com/tas.json')
-      .success(function (data) {
-        vm.data = data;
-      });
+    taService.findAll(function (tas) {
+      vm.data = tas;
+    })
 
     vm.addOrEditTA = function () {
       vm.newTA.name = 'Adam';
       vm.newTA.nickName = vm.newTA.firstName[0].toUpperCase() + 'Adam';
 
-      console.log(vm.newTA);
-      $http.post('https://mytas.firebaseio.com/tas.json', vm.newTA)
-        .success(function (res) {
-          vm.data[res.name] = vm.newTA;
-          $location.path('/tas');
-        });
+      taService.create(vm.newTA, function (res) {
+        vm.data[res.name] = vm.newTA;
+        $location.path('/tas');
+      });
     };
 
     vm.removeTA = function (id) {
