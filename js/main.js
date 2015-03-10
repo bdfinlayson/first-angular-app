@@ -1,21 +1,38 @@
 angular
-  .module('tas', [])
-  .controller('TasController', function ($scope) {
-    var vm = this;
+  .module('tas', ['ngRoute'])
+  .config(function ($routeProvider) {
+    $routeProvider
+      .when('/tas', {
+        templateUrl: 'views/table.html',
+        controller: 'TasController',
+        controllerAs: 'tas'
+      })
+      .when('/tas/new', {
+        templateUrl: 'views/form.html',
+        controller: 'TasController',
+        controllerAs: 'tas'
+      })
+      .when('/tas/:uuid', {
+        templateUrl: 'views/show.html',
+        controller: 'ShowController',
+        controllerAs: 'show'
+      })
+      .otherwise({
+        redirectTo: '/tas'
+      })
+  })
+  .controller('ShowController', function ($routeParams, $http) {
+    var vm = this,
+        id = $routeParams.uuid;
 
-    // vm.cohortOptions = {
-    //   0: 'N/A',
-    //   1: 'One',
-    //   2: 'Two',
-    //   3: 'Three',
-    //   4: 'Four',
-    //   5: 'Five',
-    //   6: 'Six',
-    //   7: 'Seven',
-    //   8: 'Eight',
-    //   9: 'Nine',
-    //   10: 'Ten'
-    // };
+    $http
+      .get('https://mytas.firebaseio.com/tas/' + id + '.json')
+      .success(function (data) {
+        vm.ta = data;
+      })
+  })
+  .controller('TasController', function ($scope, $http) {
+    var vm = this;
 
     vm.cohortOptions = [
       'N/A',
@@ -31,65 +48,46 @@ angular
       'Ten'
     ];
 
-    vm.data = [
-      {
-        nickName: 'TAdam',
-        name: 'Adam',
-        firstName: 'Adam',
-        lastName: 'Kèésecker',
-        current: true,
-        cohort: 5
-      },
-      {
-        nickName: 'ZAdam',
-        name: 'Adam',
-        firstName: 'Zöe',
-        lastName: 'Ames',
-        current: true,
-        cohort: 6
-      },
-      {
-        nickName: 'JuAdam',
-        name: 'Adam',
-        firstName: 'Juan',
-        lastName: 'Rødrįguež',
-        current: true,
-        cohort: 6
-      },
-      {
-        nickName: 'BrAdam',
-        name: 'Adam',
-        firstName: 'Brian',
-        lastName: 'Hiått',
-        current: false,
-        cohort: 6
-      },
-      {
-        nickName: 'BAdam',
-        name: 'Adam',
-        firstName: 'Adam',
-        lastName: 'Barñhærd',
-        current: false,
-        cohort: 6
-      }
-    ];
+    $http
+      .get('https://mytas.firebaseio.com/tas.json')
+      .success(function (data) {
+        vm.data = data;
+      });
 
     vm.addTA = function () {
       vm.newTA.name = 'Adam';
       vm.newTA.nickName = vm.newTA.firstName[0].toUpperCase() + 'Adam';
 
-      vm.data.push(vm.newTA);
-      _clearNewTA();
+      console.log(vm.newTA);
+      $http.post('https://mytas.firebaseio.com/tas.json', vm.newTA)
+        .success(function (res) {
+          vm.data[res.name] = vm.newTA;
+          _clearNewTA();
+        });
     };
 
-    vm.removeTA = function (person) {
-      var index = vm.data.indexOf(person);
-      vm.data.splice(index, 1);
+    vm.removeTA = function (id) {
+      var url = 'https://mytas.firebaseio.com/tas/' + id + '.json';
+      $http
+        .delete(url)
+        .success(function () {
+          delete vm.data[id];
+        });
+    };
+
+    vm.updateTA = function (id) {
+      var url = 'https://mytas.firebaseio.com/tas/' + id + '.json';
+      $http
+        .put(url, vm.data[id]);
+    };
+
+    vm.editTA = function (person) {
+
     };
 
     function _clearNewTA() {
       vm.newTA = {};
-      $scope.newTA.$setPristine();
+      $scope.newTAForm.$setPristine();
     }
 
   });
