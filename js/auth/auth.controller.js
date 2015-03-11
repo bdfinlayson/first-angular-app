@@ -31,7 +31,6 @@ function AuthController($scope, $location, BASE_URL) {
     }, function (err, authData) {
       if (err && err.code === 'EMAIL_TAKEN') {
         console.log('Error creating user:', err);
-        console.log(err);
         vm.login();
       } else if (err) {
         console.log('Error creating user:', err)
@@ -41,4 +40,28 @@ function AuthController($scope, $location, BASE_URL) {
       }
     });
   };
+
+  vm.forgotPassword = function () {
+    var fb = new Firebase(BASE_URL);
+
+    fb.resetPassword({
+      email:    vm.email,
+      password: vm.password
+    }, function (err) {
+      if (err) {
+        console.log('Error resetting password:', err)
+      } else {
+        console.log('Password reset email sent successfully');
+      }
+    });
+  };
 }
+
+
+
+
+
+
+
+
+
