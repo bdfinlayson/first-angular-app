@@ -8,7 +8,14 @@ function authConfig($routeProvider) {
     .when('/login', {
       templateUrl: 'js/auth/login.html',
       controller: 'AuthController',
-      controllerAs: 'auth'
+      controllerAs: 'auth',
+      resolve: {
+        data: function ($location, authFactory) {
+          if (authFactory.isLoggedIn()) {
+            $location.path('/tas')
+          }
+        }
+      }
     })
     .when('/logout', {
       template: '',
@@ -18,8 +25,17 @@ function authConfig($routeProvider) {
 
 function privateRoutes($rootScope, $location, authFactory) {
   $rootScope.$on('$routeChangeStart', function (event, nextRoute) {
-    if (nextRoute.$$route.private && !authFactory.isLoggedIn()) {
+
+    $rootScope.user = authFactory.getAuth();
+
+    if (loginRequired()) {
       $location.path('/login');
+    }
+
+    function loginRequired() {
+      return nextRoute.$$route && nextRoute.$$route.private && !authFactory.isLoggedIn();
     }
   });
 }
+
+
