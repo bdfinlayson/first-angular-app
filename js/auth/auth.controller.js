@@ -2,16 +2,13 @@ angular
   .module('tas')
   .controller('AuthController', AuthController)
 
-function AuthController($scope, $location, BASE_URL) {
+function AuthController($scope, $location, authFactory, BASE_URL) {
   var vm = this;
 
-  vm.login = function () {
-    var fb = new Firebase(BASE_URL);
+  vm.user = {};
 
-    fb.authWithPassword({
-      email:    vm.email,
-      password: vm.password
-    }, function (err, authData) {
+  vm.login = function () {
+    authFactory.login(vm.user, function (err, authData) {
       if (err) {
         console.log('Error logging in user:', err);
       } else {
@@ -23,12 +20,7 @@ function AuthController($scope, $location, BASE_URL) {
   };
 
   vm.register = function () {
-    var fb = new Firebase(BASE_URL);
-
-    fb.createUser({
-      email:    vm.email,
-      password: vm.password
-    }, function (err, authData) {
+    authFactory.register(vm.user, function (err, authData) {
       if (err && err.code === 'EMAIL_TAKEN') {
         console.log('Error creating user:', err);
         vm.login();
@@ -42,12 +34,7 @@ function AuthController($scope, $location, BASE_URL) {
   };
 
   vm.forgotPassword = function () {
-    var fb = new Firebase(BASE_URL);
-
-    fb.resetPassword({
-      email:    vm.email,
-      password: vm.password
-    }, function (err) {
+    authFactory.forgotPassword(vm.user, function (err) {
       if (err) {
         console.log('Error resetting password:', err)
       } else {
