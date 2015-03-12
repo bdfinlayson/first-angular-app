@@ -4,6 +4,12 @@ angular
 
 function authFactory(BASE_URL) {
   return {
+    isLoggedIn: function () {
+      var fb = new Firebase(BASE_URL);
+
+      return !!fb.getAuth();
+    },
+
     login: function (user, cb) {
       var fb = new Firebase(BASE_URL);
 
@@ -22,7 +28,7 @@ function authFactory(BASE_URL) {
       fb.createUser(user, cb);
     },
 
-    fp: function (user, cb) {
+    forgotPassword: function (user, cb) {
       var fb = new Firebase(BASE_URL);
 
       fb.resetPassword(user, cb);
