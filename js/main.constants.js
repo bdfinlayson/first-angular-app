@@ -1,6 +1,6 @@
 angular
   .module('tas')
-  .constant('BASE_URL', 'https://mytas.firebaseio.com')
+  .constant('BASE_URL', 'https://ta-angular-app.firebaseio.com')
   .constant('COHORT_OPTIONS', [
     'N/A',
     'One',
